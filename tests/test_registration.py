@@ -1,36 +1,26 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
+import locators
 
-driver = webdriver.Chrome()
-driver.get("https://stellarburgers.nomoreparties.site/")
+class TestRegistration:
+    def test_correct_registration(self, driver):
+        driver.find_element(locators.LK_BUTTON).click() # Нашел и кликнул кнопку Личный Кабинет
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((locators.REG_BUTTON))) # Ожидание для загрузки страницы
+        driver.find_element(locators.REG_BUTTON).click() # Нашел и кликнул кнопку Зарегистрироваться
+        driver.find_element(locators.FIELD_NAME).send_keys("1") # Нашел поле "Имя" и заполнил его
+        driver.find_element(locators.FIELD_EMAIL).send_keys("ilyavolkov018@gmail.com")# Нашел поле "Email" и заполнил его
+        driver.find_element(locators.FIELD_PASSWORD).send_keys("111111") # Нашел поле "Пароль" и заполнил его некорректным значением
+        driver.find_element(locators.REG_BUTTON_FOR_REG) and text() = 'Зарегистрироваться']").click() # Нашел кнопку "Зарегистрироваться" и кликнул по ней
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((locators.LOGIN_BUTTON))) # Ожидание для загрузки страницы
+        assert driver.current_url == 'https://stellarburgers.nomoreparties.site/login' # Проверил, что перешел на страницу входа
 
-# Нашел и кликнул кнопку Личный Кабинет
-driver.find_element(By.XPATH, ".//button[@class='button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_large__G21Vg']").click()
-
-# Ожидание для загрузки страницы
-WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((By.CLASS_NAME, "Auth_link__1fOlj")))
-
-# Нашел и кликнул кнопку Зарегистрироваться
-driver.find_element(By.CLASS_NAME, "Auth_link__1fOlj").click()
-
-# Нашел поле "Имя" и заполнил его
-driver.find_element(By.XPATH, "//input[@type='text' and @name='name']").send_keys("1")
-
-# Нашел поле "Email" и заполнил его
-driver.find_element(By.XPATH, "//input[@type='text' and @name='name' and @value='']").send_keys("ilyavolkov018@gmail.com")
-
-# Нашел поле "Пароль" и заполнил его
-driver.find_element(By.XPATH, "//input[@type='password' and @name='Пароль']").send_keys("111111")
-
-# Нашел кнопку "Зарегистрироваться" и кликнул по ней
-driver.find_element(By.XPATH, "//button[contains(@class, 'button_button__33qZ0') and text()='Зарегистрироваться']").click()
-
-# Ожидание для загрузки страницы
-WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((By.XPATH, "//button[contains(@class, 'button_button__33qZ0') and contains(@class, 'button_button_type_primary__1O7Bx') and text()='Войти']")))
-
-# Проверил, что перешел на страницу входа
-assert driver.current_url == 'https://stellarburgers.nomoreparties.site/login'
-
-driver.quit()
+    def test_incorrect_registration(self, driver):
+        driver.find_element(locators.LK_BUTTON).click() # Нашел и кликнул кнопку Личный Кабинет
+        WebDriverWait(driver, 3).until(expected_conditions.visibility_of_element_located((locators.REG_BUTTON))) # Ожидание для загрузки страницы
+        driver.find_element(locators.REG_BUTTON).click() # Нашел и кликнул кнопку Зарегистрироваться
+        driver.find_element(locators.FIELD_NAME).send_keys("1") # Нашел поле "Имя" и заполнил его
+        driver.find_element(locators.FIELD_EMAIL).send_keys("ilyavolkov018@gmail.com") # Нашел поле "Email" и заполнил его
+        driver.find_element(locators.FIELD_PASSWORD).send_keys("1") # Нашел поле "Пароль" и заполнил его некорректным значением
+        driver.find_element(locators.REG_BUTTON_FOR_REG).click() # Нашел кнопку "Зарегистрироваться" и кликнул по ней
+        WebDriverWait(driver, 5).until(expected_conditions.visibility_of_element_located((locators.INCORRECT_PASS))) # Дождался надписи Некорректный пароль
+        assert driver.current_url == 'https://stellarburgers.nomoreparties.site/register' # Проверил, что остался на странице регистрации
